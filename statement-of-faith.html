@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statement of Faith — Ignite Belize</title>
+    <meta name="description" content="The historic Christian convictions we stand on at Ignite Movement Belize.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@1,500;1,700&display=swap" rel="stylesheet">
+
+    <style>
+/* ====================================================================
+   IGNITE BELIZE — Design System v1.0
+   Postcard retro · B&W with ember-gold accent · handwritten flourishes
+   ====================================================================
+   Usage: link this file in <head> AFTER the Google Fonts link below:
+
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@1,500;1,700&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="ignite-styles.css">
+
+   This file contains the core design system: variables, typography,
+   layout primitives, navigation, footer, marquee bands, buttons, photo
+   frames, postcard treatments, and section scaffolding.
+
+   Page-specific styles (hero variants, unique sections) should be added
+   in a <style> block AFTER this file is linked.
+==================================================================== */
+
+
+/* ====================================================================
+   1. DESIGN TOKENS
+==================================================================== */
+:root {
+    /* GROUND — aged paper postcard */
+    --paper:    #f1ece1;   /* primary background, warm off-white */
+    --paper-2:  #e8e1d2;   /* alt section background */
+    --paper-3:  #ddd5c2;   /* deeper accent panel */
+
+    /* INK — deep blacks (warm) */
+    --ink:        #14110d;   /* primary text + structure */
+    --ink-soft:   #2a251e;   /* secondary text */
+    --ink-dim:    #6b6356;   /* muted body text */
+    --ink-faint:  #a39a87;   /* faintest line / disabled */
+
+    /* IGNITE PALETTE — single warm accent (postage-stamp red-orange) */
+    --ember:        #d2511a;   /* primary accent — links, hover, stamps */
+    --ember-bright: #e86b2a;   /* hover highlight */
+    --gold:         #b8862a;   /* deep amber, secondary accent */
+    --gold-deep:    #7d5a18;   /* deepest gold */
+
+    /* LINES */
+    --line:        rgba(20, 17, 13, 0.12);
+    --line-strong: rgba(20, 17, 13, 0.24);
+
+    /* TYPOGRAPHY */
+    --display:   'Big Shoulders Display', 'Impact', sans-serif;  /* big shouty headlines */
+    --body:      'Inter', system-ui, sans-serif;                  /* body copy */
+    --mono:      'JetBrains Mono', 'Courier New', monospace;      /* labels, meta, terminal feel */
+    --hand:      'Caveat', cursive;                               /* handwritten annotations */
+    --serif-it:  'Playfair Display', serif;                       /* italic editorial accent */
+}
+
+
+/* ====================================================================
+   2. RESET + BASE
+==================================================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--body);
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Paper grain overlay — that warm fibrous postcard texture */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Subtle vignette — paper edges feel a little aged */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9997;
+    background: radial-gradient(ellipse 100% 100% at center, transparent 50%, rgba(20, 17, 13, 0.08) 100%);
+}
+
+.container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+@media (max-width: 700px) {
+    .container { padding: 0 20px; }
+}
+
+
+/* ====================================================================
+   3. NAVIGATION + MOBILE MENU
+==================================================================== */
+nav.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 16px 32px;
+    background: rgba(241, 236, 225, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: padding 0.3s ease;
+}
+nav.main-nav.scrolled { padding: 12px 32px; }
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--ink);
+}
+.nav-brand-mark {
+    width: 38px; height: 38px;
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.4rem;
+    background: var(--ember);
+    color: var(--paper);
+    line-height: 1;
+}
+.nav-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    gap: 3px;
+}
+.nav-brand-text strong {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+.nav-brand-text small {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 4px;
+    align-items: center;
+}
+.nav-links a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 14px;
+    transition: color 0.2s, background 0.2s;
+    position: relative;
+}
+.nav-links a::before {
+    content: '/ ';
+    color: var(--ember);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.nav-links a:hover::before { opacity: 1; }
+.nav-links a:hover { color: var(--ember); }
+.nav-links a.cta {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 18px;
+    margin-left: 8px;
+}
+.nav-links a.cta::before { display: none; }
+.nav-links a.cta:hover {
+    background: var(--ember);
+    color: var(--paper);
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 36px; height: 28px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+.nav-toggle span {
+    display: block;
+    height: 2px;
+    background: var(--ink);
+    transition: transform 0.3s, opacity 0.3s;
+    width: 100%;
+}
+.nav-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: var(--paper);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(.7,0,.3,1);
+    padding: 80px 32px;
+}
+.mobile-menu.active { transform: translateY(0); }
+.mobile-menu a {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--ember); }
+
+@media (max-width: 900px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+}
+@media (max-width: 700px) {
+    nav.main-nav { padding: 12px 20px; }
+}
+
+
+/* ====================================================================
+   4. SECTION SCAFFOLDING
+==================================================================== */
+section {
+    position: relative;
+    padding: 140px 0;
+}
+
+.section-tag {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    font-weight: 500;
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+.section-tag::before {
+    content: '//';
+    opacity: 0.6;
+}
+
+.section-title {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    color: var(--ink);
+}
+.section-title .accent {
+    color: var(--ember);
+    display: inline-block;
+    position: relative;
+}
+/* Handwritten little script accent inside titles */
+.section-title .hand {
+    font-family: var(--hand);
+    font-weight: 700;
+    text-transform: none;
+    color: var(--ember);
+    font-size: 0.55em;
+    display: inline-block;
+    transform: rotate(-3deg) translateY(-12px);
+    margin: 0 6px;
+    letter-spacing: 0;
+}
+
+.section-lead {
+    font-size: 1.15rem;
+    color: var(--ink-dim);
+    max-width: 640px;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 700px) {
+    section { padding: 90px 0; }
+}
+
+
+/* ====================================================================
+   5. BUTTONS
+==================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 32px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ember);
+    transform: translateY(101%);
+    transition: transform 0.3s cubic-bezier(.7,0,.3,1);
+    z-index: 0;
+}
+.btn-primary span { position: relative; z-index: 1; }
+.btn-primary:hover::before { transform: translateY(0); }
+.btn-primary:hover { border-color: var(--ember); }
+
+.btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--line-strong);
+}
+.btn-ghost:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+
+.btn-arrow {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+
+/* ====================================================================
+   6. MARQUEE BAND (separator between sections)
+==================================================================== */
+.band {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 22px 0;
+    overflow: hidden;
+    position: relative;
+}
+.band-track {
+    display: flex;
+    gap: 60px;
+    white-space: nowrap;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    animation: marquee 26s linear infinite;
+    line-height: 1;
+}
+.band-track span { display: inline-flex; align-items: center; gap: 60px; }
+.band-track span::after {
+    content: '/';
+    color: var(--ember);
+}
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+
+/* ====================================================================
+   7. POSTCARD PHOTO FRAMES
+==================================================================== */
+.photo-frame {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--paper);
+    overflow: hidden;
+    padding: 14px 14px 60px;
+    box-shadow:
+        0 1px 0 var(--line-strong),
+        0 4px 14px rgba(20, 17, 13, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.photo-frame:nth-child(odd)  { transform: rotate(-1deg); }
+.photo-frame:nth-child(even) { transform: rotate(1deg); }
+.photo-frame:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow: 0 1px 0 var(--line-strong), 0 12px 28px rgba(20, 17, 13, 0.18);
+    z-index: 2;
+}
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* B&W postcard treatment */
+    filter: grayscale(0.65) sepia(0.18) contrast(1.05) brightness(0.98);
+    transition: filter 0.4s ease;
+}
+.photo-frame:hover img {
+    filter: grayscale(0.25) sepia(0.1) contrast(1.1);
+}
+.photo-frame .photo-caption {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    font-family: var(--hand);
+    font-weight: 500;
+    font-size: 1.4rem;
+    color: var(--ink);
+    line-height: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.photo-frame .photo-caption .num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+    text-transform: uppercase;
+}
+
+
+/* ====================================================================
+   8. CARDS (donate / generic content cards with hover-invert)
+==================================================================== */
+.card-invert {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 36px 28px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+.card-invert:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: translateY(-4px);
+}
+.card-invert:hover h3 { color: var(--paper); }
+.card-invert:hover p { color: var(--paper); opacity: 0.85; }
+
+
+/* ====================================================================
+   9. INFO PANEL (e.g. tax info, callouts) — left ember bar
+==================================================================== */
+.info-panel {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 36px;
+    position: relative;
+}
+.info-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    background: var(--ember);
+}
+.info-panel h4 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+}
+.info-panel > p {
+    color: var(--ink-dim);
+    margin-bottom: 24px;
+}
+
+
+/* ====================================================================
+   10. CONTACT ROWS (mono key/value pattern)
+==================================================================== */
+.contact-info {
+    font-family: var(--mono);
+}
+.contact-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line-strong);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.contact-row:first-of-type { border-top: 1px solid var(--line-strong); }
+.contact-row .label { color: var(--ink-faint); }
+.contact-row .value { color: var(--ink); }
+.contact-row a { color: var(--ember); text-decoration: none; }
+.contact-row a:hover { color: var(--gold); }
+
+
+/* ====================================================================
+   11. SOCIAL ICONS
+==================================================================== */
+.social-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+}
+.social-link {
+    width: 52px; height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    text-decoration: none;
+    transition: all 0.25s ease;
+    background: transparent;
+}
+.social-link:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+.social-link svg { width: 20px; height: 20px; }
+
+
+/* ====================================================================
+   12. FOOTER
+==================================================================== */
+footer.site-footer {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 0 40px;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+}
+.footer-brand h3 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 2.4rem;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+}
+.footer-brand h3 .accent { color: var(--ember); }
+.footer-brand p {
+    color: rgba(241, 236, 225, 0.6);
+    font-size: 0.95rem;
+    max-width: 360px;
+}
+.footer-col h4 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 18px;
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col a {
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--ember); }
+.footer-bottom {
+    padding-top: 30px;
+    border-top: 1px solid rgba(241, 236, 225, 0.12);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(241, 236, 225, 0.4);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+@media (max-width: 700px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+
+/* ====================================================================
+   13. POSTCARD / POLAROID (founder card, featured photos)
+==================================================================== */
+.postcard {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: var(--paper);
+    padding: 16px 16px 70px;
+    box-shadow: 0 1px 0 var(--line-strong), 0 8px 24px rgba(20, 17, 13, 0.12);
+    transform: rotate(-1.5deg);
+}
+.postcard img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.6) sepia(0.2) contrast(1.05);
+    transition: filter 0.4s ease;
+}
+.postcard:hover img {
+    filter: grayscale(0.2) sepia(0.1) contrast(1.1);
+}
+.postcard .scribble-name {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    right: 16px;
+    font-family: var(--hand);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--ink);
+    line-height: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.postcard .scribble-name .stamp {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+    text-transform: uppercase;
+    border: 1px solid var(--ember);
+    padding: 4px 8px;
+}
+
+
+/* ====================================================================
+   14. POSTAGE STAMP (decorative element)
+==================================================================== */
+.postage-stamp {
+    width: 130px;
+    height: 160px;
+    background: var(--paper);
+    border: 1px dashed var(--ink);
+    padding: 12px;
+    transform: rotate(4deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    box-shadow: 4px 4px 0 var(--line);
+}
+.postage-stamp-inner {
+    width: 100%;
+    flex: 1;
+    background: var(--ember);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+}
+.postage-stamp-inner span {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    margin-top: 6px;
+    opacity: 0.85;
+}
+.postage-stamp-bottom {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+}
+
+
+/* ====================================================================
+   15. CORNER BRACKETS (decorative HUD-style frame)
+==================================================================== */
+.bracket {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--ink);
+    opacity: 0.5;
+}
+.bracket.tl { top: 90px;  left: 32px;  border-right: 0; border-bottom: 0; }
+.bracket.tr { top: 90px;  right: 32px; border-left: 0;  border-bottom: 0; }
+.bracket.bl { bottom: 32px; left: 32px;  border-right: 0; border-top: 0; }
+.bracket.br { bottom: 32px; right: 32px; border-left: 0;  border-top: 0; }
+
+@media (max-width: 700px) {
+    .bracket { display: none; }
+}
+
+
+/* ====================================================================
+   16. HANDWRITTEN ANNOTATION (ember script, slight rotation)
+==================================================================== */
+.handwritten {
+    font-family: var(--hand);
+    font-weight: 700;
+    color: var(--ember);
+    line-height: 1;
+    display: inline-block;
+    transform: rotate(-3deg);
+}
+
+
+/* ====================================================================
+   17. SCRIBBLE UNDERLINE (used inline under headline words)
+   Use: <span style="position:relative">Word<svg class="scribble-underline" ...>...</svg></span>
+==================================================================== */
+.scribble-underline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    width: 100%;
+    height: 18px;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+
+/* ====================================================================
+   18. CHROMATIC TEXT EFFECT (use on .heat span inside hero h1)
+==================================================================== */
+.heat {
+    color: var(--ember);
+    display: inline-block;
+    position: relative;
+    text-shadow:
+        2px 0 0 rgba(184, 134, 42, 0.4),
+        -2px 0 0 rgba(210, 81, 26, 0.4);
+    animation: chromatic 4s ease-in-out infinite;
+}
+@keyframes chromatic {
+    0%, 100% { text-shadow: 2px 0 0 rgba(184, 134, 42, 0.4),  -2px 0 0 rgba(210, 81, 26, 0.4); }
+    50%      { text-shadow: 3px 0 0 rgba(184, 134, 42, 0.55), -3px 0 0 rgba(210, 81, 26, 0.55); }
+}
+
+
+/* ====================================================================
+   19. REVEAL ON SCROLL
+==================================================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ====================================================================
+   20. SCROLL CUE (use bottom corner of hero/full-height sections)
+==================================================================== */
+.scroll-cue {
+    position: absolute;
+    bottom: 32px;
+    right: 80px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    z-index: 3;
+}
+.scroll-cue::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: var(--ember);
+    transform-origin: left;
+    animation: scrollLine 2.2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+    0%, 100% { transform: scaleX(1);   opacity: 1; }
+    50%      { transform: scaleX(0.2); opacity: 0.4; }
+}
+@media (max-width: 700px) { .scroll-cue { display: none; } }
+
+
+/* ====================================================================
+   21. UTILITY ANIMATIONS
+==================================================================== */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+
+    <style>
+        /* HERO — same shape as about.html */
+        .sof-hero {
+            padding: 200px 0 80px;
+            position: relative;
+            overflow: hidden;
+            background: var(--paper);
+        }
+        .sof-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 18% 30%, rgba(210, 81, 26, 0.10) 0%, transparent 55%),
+                radial-gradient(circle at 82% 70%, rgba(184, 134, 42, 0.06) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .sof-hero .container {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 60px;
+            align-items: end;
+        }
+        .sof-hero h1 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(3.2rem, 7vw, 6rem);
+            line-height: 0.88;
+            letter-spacing: -0.025em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            color: var(--ink);
+        }
+        .sof-hero h1 .what-we {
+            display: block;
+            font-family: var(--serif-it);
+            font-style: italic;
+            font-weight: 500;
+            font-size: 0.32em;
+            color: var(--ink-soft);
+            text-transform: none;
+            letter-spacing: 0;
+            margin-bottom: 6px;
+        }
+        .sof-hero h1 .accent { color: var(--ember); }
+        .sof-hero .lead {
+            font-family: var(--body);
+            font-size: 1.2rem;
+            color: var(--ink-soft);
+            max-width: 560px;
+            line-height: 1.6;
+        }
+        @media (max-width: 900px) {
+            .sof-hero { padding: 160px 0 60px; }
+            .sof-hero .container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* SUB-NAV (same as about) */
+        .sub-nav {
+            background: var(--paper-2);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 64px;
+            z-index: 50;
+        }
+        .sub-nav .container {
+            padding-top: 16px;
+            padding-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .sub-nav a {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink);
+            text-decoration: none;
+            padding: 10px 22px;
+            border: 1px solid var(--ink);
+            transition: all 0.2s ease;
+            background: transparent;
+        }
+        .sub-nav a:hover { background: var(--ink); color: var(--paper); }
+        .sub-nav a.active { background: var(--ink); color: var(--paper); }
+        .sub-nav a .num { color: var(--ember); margin-right: 8px; }
+        .sub-nav a:hover .num,
+        .sub-nav a.active .num { color: var(--ember-bright); }
+
+        /* DOCTRINE LIST — terminal/archival ledger */
+        .doctrine-list {
+            border-top: 2px solid var(--ink);
+            margin-top: 30px;
+        }
+        .doctrine-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 32px;
+            padding: 36px 8px;
+            border-bottom: 1px solid var(--line-strong);
+            align-items: start;
+            transition: background 0.25s ease;
+        }
+        .doctrine-item:hover { background: var(--paper-2); }
+        .doctrine-item .doctrine-num {
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--ember);
+            padding-top: 8px;
+        }
+        .doctrine-item h3 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: 1.7rem;
+            text-transform: uppercase;
+            line-height: 1;
+            letter-spacing: -0.01em;
+            margin-bottom: 14px;
+            color: var(--ink);
+        }
+        .doctrine-item p {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: var(--ink-soft);
+            max-width: 760px;
+        }
+        @media (max-width: 700px) {
+            .doctrine-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 28px 4px;
+            }
+        }
+
+        /* CLOSING VERSE */
+        .verse-callout {
+            margin-top: 80px;
+            padding: 56px 40px;
+            border: 2px solid var(--ink);
+            position: relative;
+            background: var(--paper);
+            text-align: center;
+        }
+        .verse-callout::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 6px; height: 100%;
+            background: var(--ember);
+        }
+        .verse-callout p {
+            font-family: var(--serif-it);
+            font-style: italic;
+            font-weight: 500;
+            font-size: clamp(1.4rem, 2.4vw, 2rem);
+            line-height: 1.4;
+            color: var(--ink);
+            max-width: 720px;
+            margin: 0 auto 18px;
+        }
+        .verse-callout p .accent { color: var(--ember); font-style: italic; }
+        .verse-callout cite {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--ink-dim);
+            font-style: normal;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .verse-callout cite::before {
+            content: '';
+            width: 28px;
+            height: 1px;
+            background: var(--ember);
+        }
+
+        /* CTA back to About */
+        .about-bridge {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 100px 0;
+            text-align: center;
+        }
+        .about-bridge .section-tag { color: var(--ember); }
+        .about-bridge h2 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+            line-height: 0.95;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin: 18px 0 24px;
+            color: var(--paper);
+        }
+        .about-bridge h2 .accent { color: var(--ember); }
+        .about-bridge p {
+            font-family: var(--body);
+            font-size: 1.1rem;
+            color: rgba(241, 236, 225, 0.7);
+            max-width: 560px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+        }
+        .about-bridge .btn-primary {
+            background: var(--paper);
+            color: var(--ink);
+            border-color: var(--paper);
+        }
+        .about-bridge .btn-primary::before { background: var(--ember); }
+        .about-bridge .btn-primary:hover { color: var(--paper); border-color: var(--ember); }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="main-nav" id="mainNav">
+        <a href="index.html" class="nav-brand">
+            <div class="nav-brand-mark">I</div>
+            <div class="nav-brand-text">
+                <strong>Ignite Belize</strong>
+                <small>Spanish Lookout · BZ</small>
+            </div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#photos">Photos</a></li>
+            <li><a href="index.html#programs">Programs</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="index.html#donate" class="cta">Donate</a></li>
+        </ul>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Home</a>
+        <a href="index.html#photos">Photos</a>
+        <a href="index.html#programs">Programs</a>
+        <a href="about.html">About</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="index.html#donate">Donate</a>
+    </div>
+
+
+    <!-- HERO -->
+    <section class="sof-hero">
+        <div class="container">
+            <div>
+                <div class="section-tag">IGN_BZ // STATEMENT OF FAITH</div>
+                <h1>
+                    <span class="what-we">what we</span>
+                    stand <span class="accent">on</span>
+                </h1>
+                <p class="lead">
+                    The historic Christian convictions we stand on — written plainly,
+                    so there's no question what fire we're carrying.
+                </p>
+            </div>
+
+            <div class="postage-stamp" aria-hidden="true">
+                <div class="postage-stamp-inner">
+                    Sola<br>Scriptura<br>+ Spiritu
+                    <span>★ EST 2024</span>
+                </div>
+                <div class="postage-stamp-bottom">Spanish Lookout · BZ</div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SUB-NAV -->
+    <div class="sub-nav">
+        <div class="container">
+            <a href="about.html">
+                <span class="num">01</span>About Us
+            </a>
+            <a href="statement-of-faith.html" class="active">
+                <span class="num">02</span>Statement of Faith
+            </a>
+        </div>
+    </div>
+
+
+    <!-- DOCTRINE LIST -->
+    <section>
+        <div class="container">
+            <div class="section-tag">// What we believe</div>
+            <h2 class="section-title">
+                On the <span class="accent">record</span>
+            </h2>
+            <p class="section-lead">
+                Seven convictions that frame our doctrine — the bedrock under
+                every Burn Night, every Launch session, every conversation.
+            </p>
+
+            <!--
+                NOTE: The seven items below use standard evangelical Statement
+                of Faith categories as a starting point. Review with leadership
+                and replace each paragraph with your final doctrinal wording.
+            -->
+            <div class="doctrine-list">
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 01</div>
+                    <div>
+                        <h3>The Scriptures</h3>
+                        <p>We believe the Bible — both Old and New Testaments — is the inspired, inerrant, and authoritative Word of God, and the final rule for faith and practice.</p>
+                    </div>
+                </div>
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 02</div>
+                    <div>
+                        <h3>God</h3>
+                        <p>We believe in one God, eternally existing in three Persons — Father, Son, and Holy Spirit — perfect in holiness, infinite in wisdom, and unchanging in love.</p>
+                    </div>
+                </div>
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 03</div>
+                    <div>
+                        <h3>Jesus Christ</h3>
+                        <p>We believe in the deity of Jesus Christ, His virgin birth, sinless life, atoning death on the cross, bodily resurrection, ascension, and personal return in power and glory.</p>
+                    </div>
+                </div>
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 04</div>
+                    <div>
+                        <h3>The Holy Spirit</h3>
+                        <p>We believe in the present ministry of the Holy Spirit, by whose indwelling the believer is empowered to live a godly life and is gifted for service in the Church.</p>
+                    </div>
+                </div>
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 05</div>
+                    <div>
+                        <h3>Salvation</h3>
+                        <p>We believe salvation is by grace alone, through faith alone, in Christ alone — apart from works — and that all who repent and believe in Jesus are born again into eternal life.</p>
+                    </div>
+                </div>
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 06</div>
+                    <div>
+                        <h3>The Church</h3>
+                        <p>We believe the Church is the Body of Christ — a global family of believers commissioned to make disciples, love one another, and proclaim the Gospel to every nation.</p>
+                    </div>
+                </div>
+
+                <div class="doctrine-item reveal">
+                    <div class="doctrine-num">// 07</div>
+                    <div>
+                        <h3>The Mission</h3>
+                        <p>We believe every follower of Jesus is sent — that the Great Commission is the mandate of the whole Church, and that this generation in Belize is called to carry the Gospel with fresh fire.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="verse-callout reveal">
+                <p>"Your kingdom come, your will be done, on earth <span class="accent">as it is in heaven.</span>"</p>
+                <cite>Matthew 6:10</cite>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA → About -->
+    <section class="about-bridge">
+        <div class="container">
+            <div class="section-tag">// Who's behind this</div>
+            <h2>Meet the <span class="accent">movement</span></h2>
+            <p>The why behind the doctrine — who we are, what we're aiming at,
+               and the heart behind every gathering.</p>
+            <a href="about.html" class="btn btn-primary">
+                <span>About Ignite</span> <span class="btn-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>Ignite <span class="accent">Belize</span></h3>
+                    <p>A 501(c)(3) faith-based Gen-Z movement raising up movement makers across Belize. Belize as in Heaven.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>// Explore</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#photos">Photos</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="statement-of-faith.html">Statement of Faith</a></li>
+                        <li><a href="index.html#donate">Donate</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>// Connect</h4>
+                    <ul>
+                        <li><a href="https://instagram.com/Ignite.bz" target="_blank" rel="noopener">Instagram</a></li>
+                        <li><a href="https://facebook.com/ignitebz" target="_blank" rel="noopener">Facebook</a></li>
+                        <li><a href="mailto:Brent@IgniteBelize.org">Email Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Ignite Movement Belize</span>
+                <span>Spanish Lookout, BZ</span>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        const mainNav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            mainNav.classList.toggle('scrolled', window.scrollY > 30);
+        }, { passive: true });
+
+        const navToggle = document.getElementById('navToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        mobileMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('in');
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const id = a.getAttribute('href');
+                if (id.length > 1) {
+                    const target = document.querySelector(id);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
