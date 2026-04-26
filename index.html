@@ -48,6 +48,19 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
+        /* Horizon-specific tuning — Horizon is wider & more geometric than Big Shoulders.
+           These global rules keep all display headings tight and consistent. */
+        h1, h2, h3, h4,
+        .section-title,
+        .nav-brand-text strong,
+        .footer-brand h3,
+        .band-track,
+        .postage-stamp-inner,
+        .program-name,
+        .verse-text {
+            font-feature-settings: "kern" 1, "liga" 1;
+        }
+
         body {
             font-family: var(--body);
             background: var(--paper);
@@ -319,6 +332,94 @@
             color: var(--ink-dim);
         }
         @media (max-width: 900px) { .postage-stamp { display: none; } }
+
+        /* ============= POSTCARD CLUSTER (hero, top-right) ============= */
+        .postcard-cluster {
+            position: absolute;
+            top: 110px;
+            right: 50px;
+            z-index: 2;
+            width: 220px;
+            height: 320px;
+            pointer-events: none;
+        }
+        .postcard-cluster > * { pointer-events: auto; }
+
+        /* Reposition the original stamp inside the cluster */
+        .postcard-cluster .postage-stamp {
+            position: absolute;
+            top: 8px;
+            right: -10px;
+            transform: rotate(6deg);
+            z-index: 3;
+        }
+
+        /* Photo postcard — polaroid look */
+        .photo-postcard {
+            position: absolute;
+            background: var(--paper);
+            padding: 10px 10px 38px;
+            box-shadow:
+                0 1px 0 var(--line-strong),
+                0 6px 18px rgba(20, 17, 13, 0.16);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .photo-postcard img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.45) sepia(0.12) contrast(1.04);
+        }
+        .photo-postcard .photo-postcard-caption {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 8px;
+            font-family: var(--hand);
+            font-weight: 700;
+            font-size: 1.05rem;
+            line-height: 1;
+            color: var(--ink);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .photo-postcard .photo-postcard-caption .num {
+            font-family: var(--mono);
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            color: var(--ember);
+            text-transform: uppercase;
+        }
+
+        /* Two distinct photo postcards in the cluster */
+        .photo-postcard.pc-1 {
+            top: 130px;
+            right: 60px;
+            width: 165px;
+            height: 200px;
+            transform: rotate(-7deg);
+            z-index: 1;
+        }
+        .photo-postcard.pc-2 {
+            top: 175px;
+            right: -20px;
+            width: 155px;
+            height: 185px;
+            transform: rotate(5deg);
+            z-index: 2;
+        }
+        .photo-postcard:hover {
+            transform: rotate(0) translateY(-4px);
+            z-index: 4;
+        }
+
+        @media (max-width: 1100px) {
+            .postcard-cluster { transform: scale(0.85); transform-origin: top right; }
+        }
+        @media (max-width: 900px) { .postcard-cluster { display: none; } }
 
         /* Diagonal subtle grid */
         .hero::before {
@@ -1389,21 +1490,34 @@
         <div class="hero-bracket bl"></div>
         <div class="hero-bracket br"></div>
 
-        <!-- Postage stamp -->
-        <div class="postage-stamp">
-            <div class="postage-stamp-inner">
-                Belize<br>As In<br>Heaven
-                <span>★ EST 2024</span>
+        <!-- Postcard cluster -->
+        <div class="postcard-cluster" aria-hidden="true">
+            <div class="postage-stamp">
+                <div class="postage-stamp-inner">
+                    Belize<br>As In<br>Heaven
+                    <span>★ EST 2024</span>
+                </div>
+                <div class="postage-stamp-bottom">Spanish Lookout · BZ</div>
             </div>
-            <div class="postage-stamp-bottom">Spanish Lookout · BZ</div>
+
+            <div class="photo-postcard pc-1">
+                <img src="IMG_1469.JPG" alt="Ignite worship night" />
+                <div class="photo-postcard-caption">
+                    <span>burn night</span>
+                    <span class="num">/ no. 01</span>
+                </div>
+            </div>
+
+            <div class="photo-postcard pc-2">
+                <img src="IMG_4295.jpg" alt="Ignite outreach" />
+                <div class="photo-postcard-caption">
+                    <span>outreach</span>
+                    <span class="num">/ no. 02</span>
+                </div>
+            </div>
         </div>
 
         <div class="container hero-content">
-            <div class="hero-meta">
-                <span>Spanish Lookout, BZ</span>
-                <span>Est. 2024</span>
-            </div>
-
             <h1>
                 <span class="line">Ignite</span>
                 <span class="line" style="position:relative; display:inline-block;">
@@ -1415,7 +1529,7 @@
             </h1>
 
             <p class="hero-sub">
-                Raising up <strong>radical movement makers</strong> across Belize. A Gen-Z movement of disciples burning for the One who gave it all — worship nights, school programs, real outreach.
+                <strong>Gen-Z reformation, repentance, revival</strong> in Belize.
             </p>
 
             <div class="hero-ctas">
@@ -1456,28 +1570,40 @@
             <div class="photo-slider">
                 <div class="photo-track">
                     <div class="photo-slide active">
-                        <div class="photo-frame"><img src="photo7.jpg" alt="Ignite Movement worship night" /><div class="photo-caption">burn night<span class="num">01</span></div></div>
-                        <div class="photo-frame"><img src="photo8.jpg" alt="Ignite Movement gathering" /><div class="photo-caption">spanish lookout<span class="num">02</span></div></div>
+                        <div class="photo-frame"><img src="IMG_4300.jpg" alt="Ignite Movement baptism" /><div class="photo-caption">baptism<span class="num">01</span></div></div>
+                        <div class="photo-frame"><img src="IMG_4298.jpg" alt="Ignite Movement street outreach" /><div class="photo-caption">street prayer<span class="num">02</span></div></div>
                     </div>
                     <div class="photo-slide">
-                        <div class="photo-frame"><img src="photo9.jpg" alt="Ignite Movement outreach" /><div class="photo-caption">outreach<span class="num">03</span></div></div>
-                        <div class="photo-frame"><img src="photo10.jpg" alt="Ignite Movement community" /><div class="photo-caption">belize<span class="num">04</span></div></div>
+                        <div class="photo-frame"><img src="IMG_1469.JPG" alt="Ignite worship night" /><div class="photo-caption">burn night<span class="num">03</span></div></div>
+                        <div class="photo-frame"><img src="IMG_1442.JPG" alt="Ignite worship gathering" /><div class="photo-caption">worship<span class="num">04</span></div></div>
                     </div>
                     <div class="photo-slide">
-                        <div class="photo-frame"><img src="photo11.jpg" alt="Ignite Movement together" /><div class="photo-caption">together<span class="num">05</span></div></div>
-                        <div class="photo-frame"><img src="photo12.jpg" alt="Ignite Movement worship" /><div class="photo-caption">worship<span class="num">06</span></div></div>
+                        <div class="photo-frame"><img src="IMG_4295.jpg" alt="Ignite Movement preaching" /><div class="photo-caption">the call<span class="num">05</span></div></div>
+                        <div class="photo-frame"><img src="IMG_4297.jpg" alt="Ignite team Belize" /><div class="photo-caption">the squad<span class="num">06</span></div></div>
                     </div>
                     <div class="photo-slide">
-                        <div class="photo-frame"><img src="photo1.jpg" alt="Ignite Movement event" /><div class="photo-caption">movement<span class="num">07</span></div></div>
-                        <div class="photo-frame"><img src="photo2.jpg" alt="Ignite Movement Gen-Z" /><div class="photo-caption">gen-z<span class="num">08</span></div></div>
+                        <div class="photo-frame"><img src="photo7.jpg" alt="Ignite Movement worship night" /><div class="photo-caption">burn night<span class="num">07</span></div></div>
+                        <div class="photo-frame"><img src="photo8.jpg" alt="Ignite Movement gathering" /><div class="photo-caption">spanish lookout<span class="num">08</span></div></div>
                     </div>
                     <div class="photo-slide">
-                        <div class="photo-frame"><img src="photo3.jpg" alt="Ignite Movement worship" /><div class="photo-caption">on fire<span class="num">09</span></div></div>
-                        <div class="photo-frame"><img src="photo4.jpg" alt="Ignite Movement community" /><div class="photo-caption">community<span class="num">10</span></div></div>
+                        <div class="photo-frame"><img src="photo9.jpg" alt="Ignite Movement outreach" /><div class="photo-caption">outreach<span class="num">09</span></div></div>
+                        <div class="photo-frame"><img src="photo10.jpg" alt="Ignite Movement community" /><div class="photo-caption">belize<span class="num">10</span></div></div>
                     </div>
                     <div class="photo-slide">
-                        <div class="photo-frame"><img src="photo5.jpg" alt="Ignite Movement mission" /><div class="photo-caption">mission<span class="num">11</span></div></div>
-                        <div class="photo-frame"><img src="photo6.jpg" alt="Ignite Movement sent" /><div class="photo-caption">sent<span class="num">12</span></div></div>
+                        <div class="photo-frame"><img src="photo11.jpg" alt="Ignite Movement together" /><div class="photo-caption">together<span class="num">11</span></div></div>
+                        <div class="photo-frame"><img src="photo12.jpg" alt="Ignite Movement worship" /><div class="photo-caption">worship<span class="num">12</span></div></div>
+                    </div>
+                    <div class="photo-slide">
+                        <div class="photo-frame"><img src="photo1.jpg" alt="Ignite Movement event" /><div class="photo-caption">movement<span class="num">13</span></div></div>
+                        <div class="photo-frame"><img src="photo2.jpg" alt="Ignite Movement Gen-Z" /><div class="photo-caption">gen-z<span class="num">14</span></div></div>
+                    </div>
+                    <div class="photo-slide">
+                        <div class="photo-frame"><img src="photo3.jpg" alt="Ignite Movement worship" /><div class="photo-caption">on fire<span class="num">15</span></div></div>
+                        <div class="photo-frame"><img src="photo4.jpg" alt="Ignite Movement community" /><div class="photo-caption">community<span class="num">16</span></div></div>
+                    </div>
+                    <div class="photo-slide">
+                        <div class="photo-frame"><img src="photo5.jpg" alt="Ignite Movement mission" /><div class="photo-caption">mission<span class="num">17</span></div></div>
+                        <div class="photo-frame"><img src="photo6.jpg" alt="Ignite Movement sent" /><div class="photo-caption">sent<span class="num">18</span></div></div>
                     </div>
                 </div>
 
@@ -1488,6 +1614,9 @@
                     <button class="photo-dot" onclick="currentSlide(4)" aria-label="Slide 4"></button>
                     <button class="photo-dot" onclick="currentSlide(5)" aria-label="Slide 5"></button>
                     <button class="photo-dot" onclick="currentSlide(6)" aria-label="Slide 6"></button>
+                    <button class="photo-dot" onclick="currentSlide(7)" aria-label="Slide 7"></button>
+                    <button class="photo-dot" onclick="currentSlide(8)" aria-label="Slide 8"></button>
+                    <button class="photo-dot" onclick="currentSlide(9)" aria-label="Slide 9"></button>
                 </div>
             </div>
         </div>
