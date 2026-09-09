@@ -4,5 +4,6 @@
   { "day": 3, "date": "Sept 3", "image": "day-03.jpg" },
   { "day": 4, "date": "Sept 4", "image": "day-04.jpg" },
   { "day": 5, "date": "Sept 5", "image": "day-05.jpg" },
-  { "day": 6, "date": "Sept 6", "image": "day-06.jpg" }
+  { "day": 6, "date": "Sept 6", "image": "day-06.jpg" },
+  { "day": 7, "date": "Sept 7", "images": ["day-07-1.jpg", "day-07-2.jpg", "day-07-3.jpg"] }
 ]
